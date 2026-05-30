@@ -4,6 +4,9 @@ import random
 
 WIDTH,HEIGHT = 800,800
 FPS = 60
+
+player_k = float(input("Enter spring constant k: "))
+
 WINDOW = pygame.display.set_mode((WIDTH,HEIGHT))
 
 BLACK = (0,0,0)
@@ -82,7 +85,7 @@ class Ball:
 ball = Ball(coil_width/4, Ball_mass, RED)
 compression_length = coil_height * number_of_coil 
 
-player_k = float(input("Calculate spring constant k: "))
+
 
 spring = Spring(player_k, compression_length)
 
@@ -110,11 +113,6 @@ def main(window):
                 if event.key == pygame.K_SPACE:
                     spring.compressed = False
                     spring.released = True
-                # if event.key == pygame.K_DOWN:
-                #     spring.compressed = True
-                # if event.key == pygame.K_SPACE:
-                #     spring.compressed = False
-                #     spring.released = True
         draw(window)
         if spring.released:
             if spring.force > ball.mass*9.8:
