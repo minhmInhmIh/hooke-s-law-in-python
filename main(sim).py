@@ -15,6 +15,8 @@ RED = (255,0,0)
 GREEN = (0,255,0)
 
 GRAVITY = 9.8
+AIR_DENSITY = 1.225
+DRAG_COEFICIENT = 0.47
 ball_vel = [0,0]
 
 coil_width = 100
@@ -25,7 +27,7 @@ Ball_mass = 100
 
 spring_top = HEIGHT - (coil_height*5)
 
-
+PIXEL_PER_METER = 100
 
 
 
@@ -58,6 +60,7 @@ class Ball:
         self.pos = None
         self.vel = [0,0]
 
+
         self.launched = False
 
     def update_ball(self):
@@ -73,6 +76,17 @@ class Ball:
             self.vel[1] = -vel
             self.launched = True
     def fall(self):
+        radius_m = self.radius / PIXEL_PER_METER
+        area = math.pi*radius_m**2
+
+        dragForce = 0.5 * AIR_DENSITY * self.vel[1]**2 * DRAG_COEFICIENT * area
+        dragAcc = dragForce/ self.mass
+
+        if self.vel[1] < 0:
+            self.vel[1] += dragAcc
+        elif self.vel[1] > 0:
+            self.vel[1] -= dragAcc
+        
         self.vel[1] += self.GRAVITY
         self.pos[1] += self.vel[1]
 
@@ -81,6 +95,7 @@ class Ball:
             self.vel[1] = 0
             self.launched = False
             spring.released = False
+        print(f"{-self.vel[1]} m/s")
 
 ball = Ball(coil_width/4, Ball_mass, RED)
 compression_length = coil_height * number_of_coil 
@@ -113,6 +128,11 @@ def main(window):
                 if event.key == pygame.K_SPACE:
                     spring.compressed = False
                     spring.released = True
+                # if event.key == pygame.K_DOWN:
+                #     spring.compressed = True
+                # if event.key == pygame.K_SPACE:
+                #     spring.compressed = False
+                #     spring.released = True
         draw(window)
         if spring.released:
             if spring.force > ball.mass*9.8:
