@@ -2,6 +2,8 @@ import math
 import pygame
 import random
 
+pygame.init()
+
 WIDTH,HEIGHT = 800,800
 FPS = 60
 
